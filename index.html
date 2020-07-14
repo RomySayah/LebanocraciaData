@@ -5,7 +5,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Your page title here :)</title>
+  <title>LebanocraciaData</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -26,6 +26,17 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="images/favicon.png">
 
+  <!-- Scripts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="https://d3js.org/d3.v5.min.js"></script> 
+  <script type="text/javascript" src="d3.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    
+    
+    
+    
 </head>
 <body>
 
@@ -33,13 +44,127 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <div class="one-half column" style="margin-top: 25%">
-        <h4>Basic Page</h4>
-        <p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton documentation</a>.</p>
+      <div class="twelve columns" style="margin-top: 10%">
+        <h4>Visualizing the other's opinion</h4>
+        <p>By customizing voter demographic you can view what people think about different topics in Lebanon. The dataset is based on <a href="http://www.lebanocracia.org">Lebanocracia.org</a>. <em>Disclaimer: Do not consider these results are representative nation-wide</em>.</p> 
+
       </div>
     </div>
-  </div>
 
+
+            <script>
+                
+
+                
+                let gender;
+                let age;
+                let region;
+                let topic;
+                
+                let gendervalue;
+                let agevalue;
+                let regionvalue;
+                let topicvalue;
+
+
+                // chart edges
+                budgetValues = [];
+
+
+                function preload() {  
+                    table = loadTable("workshop_budget.csv", "csv", "header"); 
+                }
+
+                function setup() {
+                    createCanvas(windowWidth, windowHeight);
+                    
+                    numberOfRows = table.getRowCount();
+                    numberOfColumns = table.getColumnCount();
+                    
+                    noLoop();
+                    
+                    
+                    textAlign(CENTER);
+                    
+                    gender = createSelect();
+                    gender.position(width/2-110,200);
+                    gender.size(200,30);
+                    gender.option('--');
+                    gender.option('Male');
+                    gender.option('Female');
+                    gender.option('Other');
+                    gender.selected('--');
+                    gender.changed(genderEvent);
+                    
+                    
+                    age = createSelect();
+                    age.position(width/2-110,235);
+                    age.size(200,30);
+                    age.option('--');
+                    age.option('Below 20');
+                    age.option('20 to 30');
+                    age.option('30 to 40');
+                    age.option('40 to 50');
+                    age.option('50 to 60');
+                    age.option('60 to 70');
+                    age.option('70 to 80');
+                    age.selected('--');
+                    age.changed(ageEvent);
+
+
+                }
+                
+                function windowResized() {
+                    resizeCanvas(windowWidth, windowHeight);
+                    gender.position(width/2-110,200);
+                    age.position(width/2-110,235);
+                    
+                    
+                    
+                    
+                }
+                
+                
+                function genderEvent() {
+                    let item = gender.value();
+                    gendervalue = item;
+                    
+                }
+                
+                function ageEvent() {
+                    let item = age.value();
+                    agevalue = item;
+                    text('It is a ' + agevalue + '!', 200, 50);
+                }
+                
+
+                function draw() {
+	                background(255);
+                    fill(0);
+
+                    for (var i = 0; i < numberOfRows; i++) {
+                    //place years
+                        text(table.getString(i, 0), i * 30 + width * 0.5 - 100, 520);
+                        //pull numbers
+                        budgetValues[i] = table.getString(i, 1);
+                        //draw graph
+                        rect(i * 30 + width * 0.5 - 100, 500 - budgetValues[i], 20, budgetValues[i])
+                    }
+                    //determine highest value
+                    maxValue=max(budgetValues);
+                    for (var k=0;k<maxValue;k=k+50){
+                        text(k, width * 0.5 - 150, 520-k);
+                    }
+                    
+                }
+
+       
+                
+                
+            </script>    
+    </div>        
+
+    
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>
